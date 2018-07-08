@@ -26,4 +26,4 @@
              datetime-of-request (time-format/parse datetime-formatter timestamp)
              now (t/now)]
          (if (not (within-tolerance? datetime-of-request tolerance-in-seconds now))
-           (throw ex-info "Date of request out of tolerance.")))))))
+           (throw (SecurityException. "Date of request out of tolerance."))))))))

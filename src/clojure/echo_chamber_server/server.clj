@@ -2,8 +2,8 @@
   (:import (io.undertow.server HttpHandler HttpServerExchange RoutingHandler)
            (java.io ByteArrayOutputStream ByteArrayInputStream)
            (io.undertow Undertow)
-           (io.undertow.util Methods Headers))
-  (:require (cheshire.core :refer [generate-string parse-stream])))
+           (io.undertow.util Methods Headers HeaderMap HttpString))
+  (:require [cheshire.core :refer [generate-string parse-stream]]))
 
 (defn #^:private slurp-bytes
   "Reads bytes into a bytearray from a stream."
@@ -14,12 +14,12 @@
 
 (defn skill-handler [verifiers skill-fn]
   (reify HttpHandler
-    (handleRequest [_this ^HttpServerExchange exchange]
+    (^void handleRequest [_this ^HttpServerExchange exchange]
       (condp = (.getRequestMethod exchange)
         Methods/POST (let [request-bytes (slurp-bytes (.getInputStream exchange))
                            request-envelope (with-open [input-stream (ByteArrayInputStream. bytes)]
                                               (parse-stream input-stream))]
-                       (.put (.getResponseHeaders exchange) Headers/CONTENT_TYPE_STRING "application/json")
+                       (.put ^HeaderMap (.getResponseHeaders exchange) ^HttpString Headers/CONTENT_TYPE_STRING "application/json")
                        (doseq [verifier verifiers]
                          (verifier exchange request-envelope request-bytes))
                        (let [response (skill-fn request-envelope)
@@ -36,5 +36,5 @@
         (.get router (get skill :route "/") (skill-handler (:verifiers skill) (:skill-fn skill))))
       (.setHandler builder router))
     (let [server (.build builder)]
-      {:start (.start server)
-       :stop  (.stop server)})))
+      {:start (fn [] (.start server))
+       :stop  (fn [] (.stop server))})))

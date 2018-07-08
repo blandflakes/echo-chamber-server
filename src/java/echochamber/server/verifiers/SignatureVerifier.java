@@ -1,4 +1,4 @@
-package echo_chamber_server.verifiers;
+package echochamber.server.verifiers;
 
 import org.apache.commons.codec.binary.Base64;
 
