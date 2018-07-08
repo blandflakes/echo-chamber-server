@@ -1,5 +1,7 @@
 # echo-chamber-server
 
+[![Clojars Project](https://img.shields.io/clojars/v/echo-chamber-server.svg)](https://clojars.org/echo-chamber-server)
+
 An undertow server for hosting multitenant skills.
 
 The general idea here is to get out of Ring-land into
