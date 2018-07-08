@@ -28,6 +28,13 @@ Multiple maps can be passed after the `port` argument, but
 they must include a `:route` key in their map or the handler
 will attempt to host them at "/".
 
+## TODO
+
+* This README could use some work
+* And this project could use some tests
+* Support for request logging
+* Expose SSL config for those without reverse proxy
+
 ## License
 
 Copyright © 2018 blandflakes
